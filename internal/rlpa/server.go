@@ -53,6 +53,7 @@ func (s *server) handleConn(tcpConn *net.TCPConn) {
 	id := s.id()
 	conn := NewConn(id, tcpConn)
 	s.manager.Add(id, conn)
+	// TODO: only accept connects from estk.me cards
 	slog.Info("new connection from", "id", id)
 	defer conn.Close()
 	defer s.manager.Remove(id)
@@ -65,6 +66,21 @@ func (s *server) handleConn(tcpConn *net.TCPConn) {
 			}
 			slog.Error("error reading from connection", "error", err)
 			continue
+		}
+
+		// Some workaround, should only be called once
+		switch tag {
+		case TagManagement:
+			s.manager.HandleCallback(CallbackTypeConnSetType, id, string(ConnTypeManagement))
+			break
+		case TagDownloadProfile:
+			s.manager.HandleCallback(CallbackTypeConnSetType, id, string(ConnTypeDownloadProfile))
+			break
+		case TagProcessNotification:
+			s.manager.HandleCallback(CallbackTypeConnSetType, id, string(ConnTypeProcessNotification))
+			break
+		default:
+			break
 		}
 
 		if tag == TagClose {

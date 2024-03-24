@@ -76,6 +76,7 @@ func (c *Cmder) handleOutput(output string, input io.WriteCloser, dst any, progr
 	case CommandStdioLPA:
 		return c.handleLPAResponse(commandOutput.Payload, dst)
 	case CommandStdioProgress:
+		// TODO: How to send progress to apiServer.
 		if progress != nil {
 			return c.handleProgress(commandOutput.Payload, progress)
 		}

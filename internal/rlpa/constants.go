@@ -11,3 +11,19 @@ const (
 	TagAPDU                = 0xFE
 	TagAPDUUnlock          = 0xFF
 )
+
+type CallbackType string
+
+const (
+	CallbackTypeConnAdd     CallbackType = "add"
+	CallbackTypeConnRemove               = "remove"
+	CallbackTypeConnSetType              = "setType"
+)
+
+type ConnType string
+
+const (
+	ConnTypeManagement          ConnType = "management"
+	ConnTypeProcessNotification ConnType = "processNotification"
+	ConnTypeDownloadProfile     ConnType = "downloadProfile"
+)

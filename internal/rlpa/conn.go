@@ -29,6 +29,7 @@ func (c *Conn) registerHandlers() {
 	c.handlers = map[byte]Handler{
 		TagManagement: func(conn *Conn, data []byte) error {
 			return conn.Send(TagMessageBox, []byte("Welcome! \n You are connected to the server. \n Here is your PIN\n"+conn.Id))
+			// TODO: How to deal with the management mode?
 		},
 		TagProcessNotification: func(conn *Conn, data []byte) error {
 			defer conn.Close()

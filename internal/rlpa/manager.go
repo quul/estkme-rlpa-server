@@ -8,6 +8,10 @@ import (
 type Manager interface {
 	Add(id string, connection *Conn)
 	Remove(id string)
+	AddCallbackFunc(callbackFunc func(
+		callbackType CallbackType, id string, data string,
+	))
+	HandleCallback(callbackType CallbackType, id string, data string)
 	Get(id string) (*Conn, error)
 	GetAll() []*Conn
 	Len() int
@@ -19,6 +23,7 @@ const (
 
 type manager struct {
 	connections sync.Map
+	callbacks   []func(callbackType CallbackType, id string, data string)
 }
 
 func NewManager() Manager {
@@ -27,10 +32,26 @@ func NewManager() Manager {
 
 func (m *manager) Add(id string, connection *Conn) {
 	m.connections.Store(id, connection)
+	m.HandleCallback(CallbackTypeConnAdd, id, "")
 }
 
 func (m *manager) Remove(id string) {
 	m.connections.Delete(id)
+	m.HandleCallback(CallbackTypeConnRemove, id, "")
+}
+
+// TODO: Is Callback a good idea? If there's any better way to do this?
+
+func (m *manager) AddCallbackFunc(callbackFunc func(
+	callbackType CallbackType, id string, data string,
+)) {
+	m.callbacks = append(m.callbacks, callbackFunc)
+}
+
+func (m *manager) HandleCallback(callbackType CallbackType, id string, data string) {
+	for _, callback := range m.callbacks {
+		callback(callbackType, id, data)
+	}
 }
 
 func (m *manager) Get(id string) (*Conn, error) {
