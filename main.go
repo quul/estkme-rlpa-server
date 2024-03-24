@@ -14,7 +14,8 @@ import (
 
 func init() {
 	cwd, _ := os.Getwd()
-	flag.StringVar(&config.C.ListenAddress, "listen-address", ":1888", "rLPA server listen address")
+	// TODO: Get config from args or env
+	//flag.StringVar(&config.C.ListenAddress, "listen-address", ":1888", "rLPA server listen address")
 	flag.StringVar(&config.C.DataDir, "data-dir", filepath.Join(cwd, "data"), "data directory")
 	flag.StringVar(&config.C.LpacVersion, "lpac-version", "v2.0.0-beta.1", "lpac version")
 	flag.BoolVar(&config.C.DontDownload, "dont-download", false, "don't download lpac")
@@ -35,13 +36,15 @@ func main() {
 	}
 
 	manager := rlpa.NewManager()
-	server := rlpa.NewServer(manager)
 
-	go func() {
-		if err := server.Listen(config.C.ListenAddress); err != nil {
-			panic(err)
-		}
-	}()
+	// TODO: Create apiServer server
+	server := rlpa.NewServer(manager)
+	//
+	//go func() {
+	//	if err := server.Listen(config.C.ListenAddress); err != nil {
+	//		panic(err)
+	//	}
+	//}()
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt)

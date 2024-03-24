@@ -2,14 +2,23 @@ package config
 
 import (
 	"errors"
-	"net"
 )
 
 type Config struct {
-	ListenAddress string
-	LpacVersion   string
-	DataDir       string
-	DontDownload  bool
+	LpacVersion         string
+	DataDir             string
+	DontDownload        bool
+	RLPAListenIP        string
+	RLPAListenPortRange string
+
+	APIServerMode          string // singleUser or multiUser
+	APIServerListenAddress string
+	DBFilePath             string
+	Secret                 string
+
+	DefaultUserName string
+	DefaultPassword string
+	EnableRegister  bool
 }
 
 var C = &Config{}
@@ -19,11 +28,12 @@ var (
 )
 
 func (c *Config) IsValid() error {
-	if _, err := net.ResolveTCPAddr("tcp", c.ListenAddress); err != nil {
-		return err
-	}
-	if c.LpacVersion == "" {
-		return ErrLpacVersionEmpty
-	}
-	return nil
+	// TODO
+	//if _, err := net.ResolveTCPAddr("tcp", c.ListenAddress); err != nil {
+	//	return err
+	//}
+	//if c.LpacVersion == "" {
+	//	return ErrLpacVersionEmpty
+	//}
+	//return nil
 }
